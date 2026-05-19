@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f5f1ea;
+  --foreground: #2c1810;
+  --card: #fffdf9;
+  --border: #d8cfc2;
+  --accent: #5c3b28;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+
+  font-family:
+    Inter,
+    system-ui,
+    sans-serif;
+
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3 {
+  font-family:
+    "Cormorant Garamond",
+    Georgia,
+    serif;
+}
+
+input,
+textarea,
+select {
+  font: inherit;
+}
