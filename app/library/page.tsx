@@ -465,89 +465,179 @@ export default function LibraryPage() {
             bg-[#fffdf9]
           "
         >
-          <table className="w-full">
-            <thead>
-              <tr
-                className="
-                  border-b
-                  border-[#e4d8ca]
-                  bg-[#f4ede3]
-                "
-              >
-                <th className="text-left p-4">
-                  Title
-                </th>
+    <table className="w-full">
+      <thead>
+        <tr
+          className="
+            border-b
+            border-[#e4d8ca]
+            bg-[#f4ede3]
+          "
+        >
+          <th className="text-left p-4">
+            Title
+          </th>
 
-                <th className="text-left p-4">
-                  Author
-                </th>
+          <th className="text-left p-4">
+            Author
+          </th>
 
-                <th className="text-left p-4">
-                  Publisher
-                </th>
+          <th className="text-left p-4">
+            Publisher
+          </th>
 
-                <th className="text-left p-4">
-                  Status
-                </th>
+          <th className="text-left p-4">
+            Status
+          </th>
 
-                <th className="text-left p-4">
-                  Stamped
-                </th>
+          <th className="text-left p-4">
+            Stamped
+          </th>
 
-                <th className="text-left p-4">
-                  Purchase Date
-                </th>
-              </tr>
-            </thead>
+          <th className="text-left p-4">
+            Purchase Date
+          </th>
 
-            <tbody>
-              {filteredBooks.map(
-                (book) => (
-                  <tr
-                    key={book.id}
+          <th className="text-left p-4">
+            Actions
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {filteredBooks.map(
+          (book) => (
+            <tr
+              key={book.id}
+              className="
+                border-b
+                border-[#f1e7da]
+                hover:bg-[#faf6f0]
+                transition
+              "
+            >
+              {/* Title */}
+              <td className="p-4 font-semibold">
+                {book.title}
+              </td>
+
+              {/* Author */}
+              <td className="p-4">
+                {book.author}
+              </td>
+
+              {/* Publisher */}
+              <td className="p-4">
+                {book.publisher}
+              </td>
+
+              {/* Status */}
+              <td className="p-4">
+                <button
+                  onClick={() =>
+                    toggleStatus(book)
+                  }
+                  className={`
+                    px-3 py-1
+                    rounded-full
+                    text-sm
+                    transition
+                    hover:scale-105
+                    ${
+                      book.status ===
+                      "Lent"
+                        ? "bg-purple-100 text-purple-800"
+                        : "bg-green-100 text-green-800"
+                    }
+                  `}
+                >
+                  {book.status ===
+                  "Lent"
+                    ? `Lent to ${book.lentTo}`
+                    : "At Home"}
+                </button>
+              </td>
+
+              {/* Stamped */}
+              <td className="p-4">
+                <button
+                  onClick={() =>
+                    toggleStamped(book)
+                  }
+                  className={`
+                    px-3 py-1
+                    rounded-full
+                    text-sm
+                    transition
+                    hover:scale-105
+                    ${
+                      book.stamped
+                        ? "bg-amber-100 text-amber-900"
+                        : "bg-gray-200 text-gray-700"
+                    }
+                  `}
+                >
+                  {book.stamped
+                    ? "Stamped"
+                    : "Not stamped"}
+                </button>
+              </td>
+
+              {/* Purchase Date */}
+              <td className="p-4">
+                {book.purchaseDate ||
+                  "-"}
+              </td>
+
+              {/* Actions */}
+              <td className="p-4">
+                <div className="flex gap-2">
+                  <button
+                    onClick={() =>
+                      setEditingBook(
+                        book
+                      )
+                    }
                     className="
-                      border-b
-                      border-[#f1e7da]
-                      hover:bg-[#faf6f0]
+                      px-3 py-1
+                      rounded-xl
+                      bg-[#ede3d6]
+                      hover:bg-[#e1d2c0]
                       transition
+                      text-sm
                     "
                   >
-                    <td className="p-4 font-semibold">
-                      {book.title}
-                    </td>
+                    Edit
+                  </button>
 
-                    <td className="p-4">
-                      {book.author}
-                    </td>
-
-                    <td className="p-4">
-                      {book.publisher}
-                    </td>
-
-                    <td className="p-4">
-                      {book.status ===
-                      "Lent"
-                        ? `Lent to ${book.lentTo}`
-                        : "At Home"}
-                    </td>
-
-                    <td className="p-4">
-                      {book.stamped
-                        ? "Stamped"
-                        : "Not stamped"}
-                    </td>
-
-                    <td className="p-4">
-                      {book.purchaseDate ||
-                        "-"}
-                    </td>
-                  </tr>
-                )
-              )}
-            </tbody>
-          </table>
+                  <button
+                    onClick={() =>
+                      deleteBook(
+                        book.id!
+                      )
+                    }
+                    className="
+                      px-3 py-1
+                      rounded-xl
+                      bg-red-100
+                      text-red-700
+                      hover:bg-red-200
+                      transition
+                      text-sm
+                    "
+                  >
+                    Delete
+                  </button>
+                </div>
+              </td>
+            </tr>
+          )
+        )}
+      </tbody>
+        </table>
         </div>
-      )}
-    </main>
+      )
+    }
+        </main>
   );
 }
