@@ -13,7 +13,7 @@ type="text"
 placeholder="Search everything..."
 value={search}
 onChange={(e) => setSearch(e.target.value)}
-className="w-full p-4 rounded-2xl border border-[#c9b9a6] bg-white"
+className="w-full p-3 rounded-2xl border border-[#c9b9a6] bg-white"
 />
 );
 }

@@ -2,7 +2,9 @@ export type Book = {
   id?: string;
 
   title: string;
+
   author: string;
+
   publisher: string;
 
   purchaseDate?: string;
@@ -16,4 +18,6 @@ export type Book = {
   notes?: string;
 
   createdAt: number;
+
+  toSell?: boolean;
 };

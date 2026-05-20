@@ -99,18 +99,20 @@ export default function AddBookModal({
       setSaving(true);
 
       const payload = {
-        title,
-        author,
-        publisher,
-        purchaseDate,
-        stamped,
-        status,
-        lentTo:
-          status === "Lent"
-            ? lentTo
-            : "",
-        notes,
-      };
+  title,
+  author,
+  publisher,
+  purchaseDate,
+  stamped,
+  status,
+  lentTo:
+    status === "Lent"
+      ? lentTo
+      : "",
+  notes,
+  toSell:
+    editingBook?.toSell || false,
+};
 
       // EDIT
       if (editingBook?.id) {
@@ -158,7 +160,7 @@ export default function AddBookModal({
           bg-[#5c3b28]
           hover:bg-[#4a2f20]
           text-white
-          px-6 py-3
+          px-4 py-2
           rounded-2xl
           transition-all
           duration-200
@@ -176,7 +178,7 @@ export default function AddBookModal({
             bg-black/50
             backdrop-blur-sm
             flex items-center justify-center
-            p-4
+            p-3
             z-50
           "
         >
@@ -186,14 +188,14 @@ export default function AddBookModal({
               w-full
               max-w-2xl
               rounded-[32px]
-              p-6 md:p-8
+              p-3 md:p-8
               overflow-y-auto
               max-h-[90vh]
               shadow-2xl
               border border-[#e5d8c7]
             "
           >
-            <h2 className="text-3xl font-bold mb-6">
+            <h2 className="text-2xl font-bold mb-6">
               {editingBook
                 ? "Edit Book"
                 : "Add Book"}
@@ -209,7 +211,7 @@ export default function AddBookModal({
                 }
                 className="
                   w-full
-                  px-4 py-3
+                  px-3 py-2
                   rounded-2xl
                   border border-[#d7ccbf]
                   bg-white
@@ -229,7 +231,7 @@ export default function AddBookModal({
                 }
                 className="
                   w-full
-                  px-4 py-3
+                  px-3 py-2
                   rounded-2xl
                   border border-[#d7ccbf]
                   bg-white
@@ -251,7 +253,7 @@ export default function AddBookModal({
                 }
                 className="
                   w-full
-                  px-4 py-3
+                  px-3 py-2
                   rounded-2xl
                   border border-[#d7ccbf]
                   bg-white
@@ -273,7 +275,7 @@ export default function AddBookModal({
                 }
                 className="
                   w-full
-                  px-4 py-3
+                  px-3 py-2
                   rounded-2xl
                   border border-[#d7ccbf]
                   bg-white
@@ -304,7 +306,7 @@ export default function AddBookModal({
                   }
                   className="
                     w-full
-                    px-4 py-3
+                    px-3 py-2
                     rounded-2xl
                     border border-[#d7ccbf]
                     bg-white
@@ -338,7 +340,7 @@ export default function AddBookModal({
                   }
                   className="
                     w-full
-                    px-4 py-3
+                    px-3 py-2
                     rounded-2xl
                     border border-[#d7ccbf]
                     bg-white
@@ -366,7 +368,7 @@ export default function AddBookModal({
                   }
                   className="
                     w-full
-                    px-4 py-3
+                    px-3 py-2
                     rounded-2xl
                     border border-[#d7ccbf]
                     bg-white
@@ -387,7 +389,7 @@ export default function AddBookModal({
                 }
                 className="
                   w-full
-                  px-4 py-3
+                  px-3 py-2
                   rounded-2xl
                   border border-[#d7ccbf]
                   bg-white
@@ -401,7 +403,7 @@ export default function AddBookModal({
             </div>
 
             {/* Buttons */}
-            <div className="flex gap-4 mt-8">
+            <div className="flex gap-2 mt-8">
               <button
                 onClick={addBook}
                 disabled={saving}
@@ -410,7 +412,7 @@ export default function AddBookModal({
                   hover:bg-[#4a2f20]
                   disabled:opacity-50
                   text-white
-                  px-6 py-3
+                  px-4 py-2
                   rounded-2xl
                   transition-all
                   duration-200
@@ -432,7 +434,7 @@ export default function AddBookModal({
                 className="
                   border
                   border-[#d7ccbf]
-                  px-6 py-3
+                  px-4 py-2
                   rounded-2xl
                   hover:bg-[#f4ede3]
                   transition
