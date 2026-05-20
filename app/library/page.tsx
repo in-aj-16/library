@@ -20,7 +20,10 @@ import AddBookModal from "@/components/AddBookModal";
 
 export default function LibraryPage() {
   const [books, setBooks] = useState<Book[]>([]);
-  const [search, setSearch] = useState("");
+
+  const [search, setSearch] =
+    useState("");
+
   const [filter, setFilter] =
     useState("all");
 
@@ -28,7 +31,9 @@ export default function LibraryPage() {
     useState("createdAt");
 
   const [sortDirection, setSortDirection] =
-    useState<"asc" | "desc">("asc");
+    useState<"asc" | "desc">(
+      "asc"
+    );
 
   const [view, setView] = useState<
     "grid" | "list"
@@ -47,6 +52,12 @@ export default function LibraryPage() {
     useState<
       "library" | "lent" | "sell"
     >("library");
+
+  const [role, setRole] = useState<
+    "admin" | "guest"
+  >("guest");
+
+  const isGuest = role === "guest";
 
   const showToast = (
     message: string
@@ -74,12 +85,28 @@ export default function LibraryPage() {
   };
 
   useEffect(() => {
+    const savedRole =
+      localStorage.getItem("role");
+
+    if (!savedRole) {
+      window.location.href =
+        "/login";
+
+      return;
+    }
+
+    setRole(
+      savedRole as "admin" | "guest"
+    );
+
     fetchBooks();
   }, []);
 
   const deleteBook = async (
     id: string
   ) => {
+    if (isGuest) return;
+
     const confirmed = confirm(
       "Delete this book?"
     );
@@ -98,6 +125,8 @@ export default function LibraryPage() {
   const toggleStamped = async (
     book: Book
   ) => {
+    if (isGuest) return;
+
     await updateDoc(
       doc(db, "books", book.id!),
       {
@@ -111,6 +140,8 @@ export default function LibraryPage() {
   const toggleStatus = async (
     book: Book
   ) => {
+    if (isGuest) return;
+
     if (book.status === "At Home") {
       const name = prompt(
         "Lent to whom?"
@@ -141,6 +172,8 @@ export default function LibraryPage() {
   const toggleSell = async (
     book: Book
   ) => {
+    if (isGuest) return;
+
     await updateDoc(
       doc(db, "books", book.id!),
       {
@@ -419,6 +452,7 @@ export default function LibraryPage() {
               setActivePage(
                 "library"
               );
+
               setSidebarOpen(false);
             }}
             className={`w-full text-left px-3 py-2 rounded-xl transition text-[15px] ${
@@ -433,6 +467,7 @@ export default function LibraryPage() {
           <button
             onClick={() => {
               setActivePage("lent");
+
               setSidebarOpen(false);
             }}
             className={`w-full text-left px-3 py-2 rounded-xl transition text-[15px] ${
@@ -447,6 +482,7 @@ export default function LibraryPage() {
           <button
             onClick={() => {
               setActivePage("sell");
+
               setSidebarOpen(false);
             }}
             className={`w-full text-left px-3 py-2 rounded-xl transition text-[15px] ${
@@ -460,9 +496,41 @@ export default function LibraryPage() {
 
           <button
             onClick={exportCSV}
-            className="w-full text-left px-3 py-2 rounded-xl transition text-[15px] hover:bg-[#efe5d7]"
+            className="
+              w-full
+              text-left
+              px-3
+              py-2
+              rounded-xl
+              transition
+              text-[15px]
+              hover:bg-[#efe5d7]
+            "
           >
             Export CSV
+          </button>
+
+          <button
+            onClick={() => {
+              localStorage.removeItem(
+                "role"
+              );
+
+              window.location.href =
+                "/login";
+            }}
+            className="
+              w-full
+              text-left
+              px-3
+              py-2
+              rounded-xl
+              transition
+              text-[15px]
+              hover:bg-[#efe5d7]
+            "
+          >
+            Logout
           </button>
         </div>
       </div>
@@ -473,7 +541,14 @@ export default function LibraryPage() {
           onClick={() =>
             setSidebarOpen(true)
           }
-          className="text-xl w-9 h-9 rounded-xl hover:bg-[#eadfce] transition"
+          className="
+            text-xl
+            w-9
+            h-9
+            rounded-xl
+            hover:bg-[#eadfce]
+            transition
+          "
         >
           ☰
         </button>
@@ -503,6 +578,12 @@ export default function LibraryPage() {
                 {filteredBooks.length}
               </span>
             </div>
+
+            {isGuest && (
+              <div className="px-3 h-[36px] rounded-xl bg-yellow-100 text-yellow-800 inline-flex items-center text-sm">
+                Guest Mode
+              </div>
+            )}
           </div>
 
           <p className="opacity-60 text-sm mt-1">
@@ -512,15 +593,17 @@ export default function LibraryPage() {
         </div>
 
         <div className="ml-auto">
-          <AddBookModal
-            refresh={fetchBooks}
-            editingBook={
-              editingBook
-            }
-            setEditingBook={
-              setEditingBook
-            }
-          />
+          {!isGuest && (
+            <AddBookModal
+              refresh={fetchBooks}
+              editingBook={
+                editingBook
+              }
+              setEditingBook={
+                setEditingBook
+              }
+            />
+          )}
         </div>
       </div>
 
@@ -549,7 +632,15 @@ export default function LibraryPage() {
                       : "asc"
                 )
               }
-              className="h-[44px] px-4 rounded-xl bg-white border border-[#cdbda8] text-sm"
+              className="
+                h-[44px]
+                px-4
+                rounded-xl
+                bg-white
+                border
+                border-[#cdbda8]
+                text-sm
+              "
             >
               {sortDirection ===
               "asc"
@@ -588,237 +679,226 @@ export default function LibraryPage() {
         </div>
 
         {filteredBooks.length ===
-        0 ? (
-          <div className="text-center py-20 opacity-50">
-            No books found
-          </div>
-        ) : view === "grid" ? (
-          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-            {filteredBooks.map(
-              (book) => (
-                <BookCard
-                  key={book.id}
-                  book={book}
-                  activePage={
-                    activePage
-                  }
-                  onDelete={
-                    deleteBook
-                  }
-                  onEdit={
-                    setEditingBook
-                  }
-                  onToggleStamped={
-                    toggleStamped
-                  }
-                  onToggleStatus={
-                    toggleStatus
-                  }
-                  onToggleSell={
-                    toggleSell
-                  }
-                />
-              )
-            )}
-          </div>
-        ) : (
-          <div
-  className="
-    overflow-x-auto
-    rounded-2xl
-    border
-    bg-[#fffdf9]
-    border-[#e4d8ca]
-  "
->
-  <table className="w-full">
-    <thead>
-      <tr className="bg-[#f4ede3]">
-        <th className="text-left p-3 text-sm">
-          Title
-        </th>
+0 ? (
+  <div className="text-center py-20 opacity-50">
+    No books found
+  </div>
+) : view === "grid" ? (
+  <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+    {filteredBooks.map(
+      (book) => (
+        <BookCard
+          key={book.id}
+          book={book}
+          isGuest={isGuest}
+          activePage={
+            activePage
+          }
+          onDelete={
+            deleteBook
+          }
+          onEdit={
+            setEditingBook
+          }
+          onToggleStamped={
+            toggleStamped
+          }
+          onToggleStatus={
+            toggleStatus
+          }
+          onToggleSell={
+            toggleSell
+          }
+        />
+      )
+    )}
+  </div>
+) : (
+  <div
+    className="
+      overflow-x-auto
+      rounded-2xl
+      border
+      bg-[#fffdf9]
+      border-[#e4d8ca]
+    "
+  >
+    <table className="w-full">
+      <thead>
+        <tr className="bg-[#f4ede3]">
+          <th className="text-left p-3 text-sm">
+            Title
+          </th>
 
-        <th className="text-left p-3 text-sm">
-          Author
-        </th>
+          <th className="text-left p-3 text-sm">
+            Author
+          </th>
 
-        <th className="text-left p-3 text-sm">
-          Reading
-        </th>
+          <th className="text-left p-3 text-sm">
+            Reading
+          </th>
 
-        <th className="text-left p-3 text-sm">
-          Stamped
-        </th>
+          <th className="text-left p-3 text-sm">
+            Stamped
+          </th>
 
-        <th className="text-left p-3 text-sm">
-          Status
-        </th>
+          <th className="text-left p-3 text-sm">
+            Status
+          </th>
 
-        <th className="text-left p-3 text-sm">
-          Actions
-        </th>
-      </tr>
-    </thead>
+          {!isGuest && (
+            <th className="text-left p-3 text-sm">
+              Actions
+            </th>
+          )}
+        </tr>
+      </thead>
 
-    <tbody>
-      {filteredBooks.map(
-        (book) => (
-          <tr
-            key={book.id}
-            className={`
-              border-b
-              border-[#f1e7da]
+      <tbody>
+        {filteredBooks.map(
+          (book) => (
+            <tr
+              key={book.id}
+              className={`
+                border-b
+                border-[#f1e7da]
 
-              ${
-                book.toSell
-                  ? "bg-[#fde2e2]"
-                  : ""
-              }
-            `}
-          >
-            {/* Title */}
-            <td className="p-3 text-sm font-medium">
-              {book.title}
-            </td>
-
-            {/* Author */}
-            <td className="p-3 text-sm">
-              {book.author}
-            </td>
-
-            {/* Reading */}
-            <td className="p-3 text-sm">
-              <span
-                className={`
-                  px-3
-                  py-1
-                  rounded-full
-                  text-[12px]
-
-                  ${
-                    book.readingStatus ===
-                    "Read"
-                      ? "bg-blue-100 text-blue-700"
-                      : book.readingStatus ===
-                        "Reading"
-                      ? "bg-green-100 text-green-700"
-                      : book.readingStatus ===
-                        "Paused"
-                      ? "bg-yellow-100 text-yellow-700"
-                      : book.readingStatus ===
-                        "DNF"
-                      ? "bg-red-100 text-red-700"
-                      : "bg-gray-200 text-gray-700"
-                  }
-                `}
-              >
-                {book.readingStatus ||
-                  "TBR"}
-              </span>
-            </td>
-
-            {/* Stamped */}
-            <td className="p-3 text-sm">
-              <button
-                onClick={() =>
-                  toggleStamped(
-                    book
-                  )
+                ${
+                  book.toSell
+                    ? "bg-[#fde2e2]"
+                    : ""
                 }
-                className={`
-                  px-3
-                  py-1
-                  rounded-full
-                  text-[12px]
+              `}
+            >
+              <td className="p-3 text-sm font-medium">
+                {book.title}
+              </td>
 
-                  ${
-                    book.stamped
-                      ? "bg-amber-100 text-amber-900"
-                      : "bg-gray-200 text-gray-700"
-                  }
-                `}
-              >
-                {book.stamped
-                  ? "Stamped"
-                  : "Not stamped"}
-              </button>
-            </td>
+              <td className="p-3 text-sm">
+                {book.author}
+              </td>
 
-            {/* Status */}
-            <td className="p-3 text-sm">
-              <button
-                onClick={() =>
-                  toggleStatus(
-                    book
-                  )
-                }
-                className={`
-                  px-3
-                  py-1
-                  rounded-full
-                  text-[12px]
-
-                  ${
-                    book.status ===
-                    "Lent"
-                      ? "bg-purple-100 text-purple-700"
-                      : "bg-green-100 text-green-700"
-                  }
-                `}
-              >
-                {book.status ===
-                "Lent"
-                  ? `Lent to ${book.lentTo}`
-                  : "At Home"}
-              </button>
-            </td>
-
-            {/* Actions */}
-            <td className="p-3 text-sm">
-              <div className="flex gap-2">
-                <button
-                  onClick={() =>
-                    setEditingBook(
-                      book
-                    )
-                  }
-                  className="
+              <td className="p-3 text-sm">
+                <span
+                  className={`
                     px-3
                     py-1
-                    rounded-lg
-                    bg-[#efe5d7]
+                    rounded-full
                     text-[12px]
-                  "
-                >
-                  Edit
-                </button>
 
-                <button
-                  onClick={() =>
-                    deleteBook(
-                      book.id!
-                    )
-                  }
-                  className="
+                    ${
+                      book.readingStatus ===
+                      "Read"
+                        ? "bg-blue-100 text-blue-700"
+                        : book.readingStatus ===
+                          "Reading"
+                        ? "bg-green-100 text-green-700"
+                        : book.readingStatus ===
+                          "Paused"
+                        ? "bg-yellow-100 text-yellow-700"
+                        : book.readingStatus ===
+                          "DNF"
+                        ? "bg-red-100 text-red-700"
+                        : "bg-gray-200 text-gray-700"
+                    }
+                  `}
+                >
+                  {book.readingStatus ||
+                    "TBR"}
+                </span>
+              </td>
+
+              <td className="p-3 text-sm">
+                <span
+                  className={`
                     px-3
                     py-1
-                    rounded-lg
-                    bg-red-200
-                    text-red-700
+                    rounded-full
                     text-[12px]
-                  "
+
+                    ${
+                      book.stamped
+                        ? "bg-amber-100 text-amber-900"
+                        : "bg-gray-200 text-gray-700"
+                    }
+                  `}
                 >
-                  Delete
-                </button>
-              </div>
-            </td>
-          </tr>
-        )
-      )}
-    </tbody>
-  </table>
-</div>
+                  {book.stamped
+                    ? "Stamped"
+                    : "Not stamped"}
+                </span>
+              </td>
+
+              <td className="p-3 text-sm">
+                <span
+                  className={`
+                    px-3
+                    py-1
+                    rounded-full
+                    text-[12px]
+
+                    ${
+                      book.status ===
+                      "Lent"
+                        ? "bg-purple-100 text-purple-700"
+                        : "bg-green-100 text-green-700"
+                    }
+                  `}
+                >
+                  {book.status ===
+                  "Lent"
+                    ? `Lent to ${book.lentTo}`
+                    : "At Home"}
+                </span>
+              </td>
+
+              {!isGuest && (
+                <td className="p-3 text-sm">
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() =>
+                        setEditingBook(
+                          book
+                        )
+                      }
+                      className="
+                        px-3
+                        py-1
+                        rounded-lg
+                        bg-[#efe5d7]
+                        text-[12px]
+                      "
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        deleteBook(
+                          book.id!
+                        )
+                      }
+                      className="
+                        px-3
+                        py-1
+                        rounded-lg
+                        bg-red-200
+                        text-red-700
+                        text-[12px]
+                      "
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              )}
+            </tr>
+          )
         )}
+      </tbody>
+    </table>
+  </div>
+)}
       </div>
     </main>
   );

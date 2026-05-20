@@ -3,6 +3,8 @@ import { Book } from "@/types/book";
 type Props = {
   book: Book;
 
+  isGuest: boolean;
+
   activePage:
     | "library"
     | "lent"
@@ -27,6 +29,7 @@ type Props = {
 
 export default function BookCard({
   book,
+  isGuest,
   activePage,
   onDelete,
   onEdit,
@@ -67,44 +70,49 @@ export default function BookCard({
           </p>
         </div>
 
-        <div className="flex flex-col gap-2 h-fit">
-          <button
-            onClick={() => onEdit(book)}
-            className="
-              text-sm
-              px-3 py-1
-              rounded-xl
-              bg-[#ede3d6]
-              hover:bg-[#e1d2c0]
-              transition
-            "
-          >
-            Edit
-          </button>
+        {!isGuest && (
+          <div className="flex flex-col gap-2 h-fit">
+            <button
+              onClick={() =>
+                onEdit(book)
+              }
+              className="
+                text-sm
+                px-3 py-1
+                rounded-xl
+                bg-[#ede3d6]
+                hover:bg-[#e1d2c0]
+                transition
+              "
+            >
+              Edit
+            </button>
 
-          <button
-            onClick={() =>
-              onDelete(book.id!)
-            }
-            className="
-              text-sm
-              px-3 py-1
-              rounded-xl
-              bg-red-200
-              text-red-800
-              hover:bg-red-300
-              transition
-            "
-          >
-            Delete
-          </button>
-        </div>
+            <button
+              onClick={() =>
+                onDelete(book.id!)
+              }
+              className="
+                text-sm
+                px-3 py-1
+                rounded-xl
+                bg-red-200
+                text-red-800
+                hover:bg-red-300
+                transition
+              "
+            >
+              Delete
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Tags */}
       <div className="mt-5 flex flex-wrap gap-2">
         {/* Stamped */}
         <button
+          disabled={isGuest}
           onClick={() =>
             onToggleStamped(book)
           }
@@ -114,6 +122,8 @@ export default function BookCard({
             rounded-full
             text-[12px]
             transition
+            disabled:opacity-60
+            disabled:cursor-not-allowed
 
             ${
               book.stamped
@@ -129,6 +139,7 @@ export default function BookCard({
 
         {/* Lent Status */}
         <button
+          disabled={isGuest}
           onClick={() =>
             onToggleStatus(book)
           }
@@ -138,6 +149,8 @@ export default function BookCard({
             rounded-full
             text-[12px]
             transition
+            disabled:opacity-60
+            disabled:cursor-not-allowed
 
             ${
               book.status === "Lent"
@@ -182,7 +195,8 @@ export default function BookCard({
       </div>
 
       {/* Sell Actions */}
-      {book.toSell &&
+      {!isGuest &&
+      book.toSell &&
       activePage === "sell" ? (
         <div className="mt-5 flex gap-2">
           <button
@@ -221,7 +235,8 @@ export default function BookCard({
             ✕ Remove
           </button>
         </div>
-      ) : !book.toSell ? (
+      ) : !isGuest &&
+        !book.toSell ? (
         <button
           onClick={() =>
             onToggleSell(book)
