@@ -21,7 +21,8 @@ import AddBookModal from "@/components/AddBookModal";
 export default function LibraryPage() {
   const [books, setBooks] = useState<Book[]>([]);
   const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState("all");
+  const [filter, setFilter] =
+    useState("all");
 
   const [sort, setSort] =
     useState("createdAt");
@@ -158,6 +159,7 @@ export default function LibraryPage() {
       "Purchase Date",
       "Stamped",
       "Status",
+      "Reading Status",
       "Lent To",
       "To Sell",
       "Notes",
@@ -173,6 +175,8 @@ export default function LibraryPage() {
           ? "Yes"
           : "No",
         book.status,
+        book.readingStatus ||
+          "TBR",
         book.lentTo || "",
         book.toSell
           ? "Yes"
@@ -251,6 +255,44 @@ export default function LibraryPage() {
     if (filter === "available") {
       result = result.filter(
         (b) => b.status === "At Home"
+      );
+    }
+
+    if (filter === "tbr") {
+      result = result.filter(
+        (b) =>
+          b.readingStatus === "TBR"
+      );
+    }
+
+    if (filter === "reading") {
+      result = result.filter(
+        (b) =>
+          b.readingStatus ===
+          "Reading"
+      );
+    }
+
+    if (filter === "read") {
+      result = result.filter(
+        (b) =>
+          b.readingStatus ===
+          "Read"
+      );
+    }
+
+    if (filter === "paused") {
+      result = result.filter(
+        (b) =>
+          b.readingStatus ===
+          "Paused"
+      );
+    }
+
+    if (filter === "dnf") {
+      result = result.filter(
+        (b) =>
+          b.readingStatus === "DNF"
       );
     }
 
@@ -377,24 +419,13 @@ export default function LibraryPage() {
               setActivePage(
                 "library"
               );
-
               setSidebarOpen(false);
             }}
-            className={`
-              w-full
-              text-left
-              px-3 py-2
-              rounded-xl
-              transition
-              text-[15px]
-
-              ${
-                activePage ===
-                "library"
-                  ? "bg-[#5c3b28] text-white"
-                  : "hover:bg-[#efe5d7]"
-              }
-            `}
+            className={`w-full text-left px-3 py-2 rounded-xl transition text-[15px] ${
+              activePage === "library"
+                ? "bg-[#5c3b28] text-white"
+                : "hover:bg-[#efe5d7]"
+            }`}
           >
             Library
           </button>
@@ -402,24 +433,13 @@ export default function LibraryPage() {
           <button
             onClick={() => {
               setActivePage("lent");
-
               setSidebarOpen(false);
             }}
-            className={`
-              w-full
-              text-left
-              px-3 py-2
-              rounded-xl
-              transition
-              text-[15px]
-
-              ${
-                activePage ===
-                "lent"
-                  ? "bg-[#5c3b28] text-white"
-                  : "hover:bg-[#efe5d7]"
-              }
-            `}
+            className={`w-full text-left px-3 py-2 rounded-xl transition text-[15px] ${
+              activePage === "lent"
+                ? "bg-[#5c3b28] text-white"
+                : "hover:bg-[#efe5d7]"
+            }`}
           >
             Lent Books
           </button>
@@ -427,39 +447,20 @@ export default function LibraryPage() {
           <button
             onClick={() => {
               setActivePage("sell");
-
               setSidebarOpen(false);
             }}
-            className={`
-              w-full
-              text-left
-              px-3 py-2
-              rounded-xl
-              transition
-              text-[15px]
-
-              ${
-                activePage ===
-                "sell"
-                  ? "bg-[#5c3b28] text-white"
-                  : "hover:bg-[#efe5d7]"
-              }
-            `}
+            className={`w-full text-left px-3 py-2 rounded-xl transition text-[15px] ${
+              activePage === "sell"
+                ? "bg-[#5c3b28] text-white"
+                : "hover:bg-[#efe5d7]"
+            }`}
           >
             Selling Stack
           </button>
 
           <button
             onClick={exportCSV}
-            className="
-              w-full
-              text-left
-              px-3 py-2
-              rounded-xl
-              transition
-              text-[15px]
-              hover:bg-[#efe5d7]
-            "
+            className="w-full text-left px-3 py-2 rounded-xl transition text-[15px] hover:bg-[#efe5d7]"
           >
             Export CSV
           </button>
@@ -467,56 +468,23 @@ export default function LibraryPage() {
       </div>
 
       {/* Header */}
-      <div
-        className="
-          flex
-          items-center
-          gap-3
-          px-5
-          py-4
-        "
-      >
+      <div className="flex items-center gap-3 px-5 py-4">
         <button
           onClick={() =>
             setSidebarOpen(true)
           }
-          className="
-            text-xl
-            w-9
-            h-9
-            rounded-xl
-            hover:bg-[#eadfce]
-            transition
-          "
+          className="text-xl w-9 h-9 rounded-xl hover:bg-[#eadfce] transition"
         >
           ☰
         </button>
 
         <div>
           <div className="flex items-center gap-3">
-            <h1
-              className="
-                text-3xl
-                md:text-4xl
-                font-bold
-                leading-none
-              "
-            >
+            <h1 className="text-3xl md:text-4xl font-bold leading-none">
               Ex libris AJ
             </h1>
 
-            <div
-              className="
-                inline-flex
-                items-center
-                gap-2
-                px-3
-                h-[36px]
-                rounded-xl
-                bg-[#efe5d7]
-                text-[#5c3b28]
-              "
-            >
+            <div className="inline-flex items-center gap-2 px-3 h-[36px] rounded-xl bg-[#efe5d7] text-[#5c3b28]">
               <span className="text-sm font-medium">
                 {activePage ===
                 "lent"
@@ -557,14 +525,7 @@ export default function LibraryPage() {
       </div>
 
       {/* Main */}
-      <div
-        className="
-          max-w-7xl
-          mx-auto
-          px-5
-          pb-10
-        "
-      >
+      <div className="max-w-7xl mx-auto px-5 pb-10">
         <div className="space-y-4 mb-6">
           <SearchBar
             search={search}
@@ -588,15 +549,7 @@ export default function LibraryPage() {
                       : "asc"
                 )
               }
-              className="
-                h-[44px]
-                px-4
-                rounded-xl
-                bg-white
-                border
-                border-[#cdbda8]
-                text-sm
-              "
+              className="h-[44px] px-4 rounded-xl bg-white border border-[#cdbda8] text-sm"
             >
               {sortDirection ===
               "asc"
@@ -604,31 +557,16 @@ export default function LibraryPage() {
                 : "Descending ↓"}
             </button>
 
-            <div
-              className="
-                flex
-                rounded-xl
-                overflow-hidden
-                border
-                border-[#d7ccbf]
-              "
-            >
+            <div className="flex rounded-xl overflow-hidden border border-[#d7ccbf]">
               <button
                 onClick={() =>
                   setView("grid")
                 }
-                className={`
-                  h-[44px]
-                  px-4
-                  text-sm
-                  transition
-
-                  ${
-                    view === "grid"
-                      ? "bg-[#5c3b28] text-white"
-                      : "bg-white"
-                  }
-                `}
+                className={`h-[44px] px-4 text-sm transition ${
+                  view === "grid"
+                    ? "bg-[#5c3b28] text-white"
+                    : "bg-white"
+                }`}
               >
                 Grid
               </button>
@@ -637,18 +575,11 @@ export default function LibraryPage() {
                 onClick={() =>
                   setView("list")
                 }
-                className={`
-                  h-[44px]
-                  px-4
-                  text-sm
-                  transition
-
-                  ${
-                    view === "list"
-                      ? "bg-[#5c3b28] text-white"
-                      : "bg-white"
-                  }
-                `}
+                className={`h-[44px] px-4 text-sm transition ${
+                  view === "list"
+                    ? "bg-[#5c3b28] text-white"
+                    : "bg-white"
+                }`}
               >
                 List
               </button>
@@ -662,49 +593,36 @@ export default function LibraryPage() {
             No books found
           </div>
         ) : view === "grid" ? (
-          <div
-            className="
-              grid
-              gap-3
-              md:grid-cols-2
-              xl:grid-cols-3
-            "
-          >
+          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
             {filteredBooks.map(
               (book) => (
                 <BookCard
-  key={book.id}
-  book={book}
-  activePage={activePage}
-  onDelete={
-    deleteBook
-  }
-  onEdit={
-    setEditingBook
-  }
-  onToggleStamped={
-    toggleStamped
-  }
-  onToggleStatus={
-    toggleStatus
-  }
-  onToggleSell={
-    toggleSell
-  }
-/>
+                  key={book.id}
+                  book={book}
+                  activePage={
+                    activePage
+                  }
+                  onDelete={
+                    deleteBook
+                  }
+                  onEdit={
+                    setEditingBook
+                  }
+                  onToggleStamped={
+                    toggleStamped
+                  }
+                  onToggleStatus={
+                    toggleStatus
+                  }
+                  onToggleSell={
+                    toggleSell
+                  }
+                />
               )
             )}
           </div>
         ) : (
-          <div
-            className="
-              overflow-x-auto
-              rounded-2xl
-              border
-              bg-[#fffdf9]
-              border-[#e4d8ca]
-            "
-          >
+          <div className="overflow-x-auto rounded-2xl border bg-[#fffdf9] border-[#e4d8ca]">
             <table className="w-full">
               <thead>
                 <tr className="bg-[#f4ede3]">
@@ -717,19 +635,11 @@ export default function LibraryPage() {
                   </th>
 
                   <th className="text-left p-3 text-sm">
-                    Publisher
+                    Reading
                   </th>
 
                   <th className="text-left p-3 text-sm">
                     Status
-                  </th>
-
-                  <th className="text-left p-3 text-sm">
-                    Stamped
-                  </th>
-
-                  <th className="text-left p-3 text-sm">
-                    Sell
                   </th>
 
                   <th className="text-left p-3 text-sm">
@@ -743,16 +653,11 @@ export default function LibraryPage() {
                   (book) => (
                     <tr
                       key={book.id}
-                      className={`
-                        border-b
-                        border-[#f1e7da]
-
-                        ${
-                          book.toSell
-                            ? "bg-[#fde2e2]"
-                            : ""
-                        }
-                      `}
+                      className={`border-b border-[#f1e7da] ${
+                        book.toSell
+                          ? "bg-[#fde2e2]"
+                          : ""
+                      }`}
                     >
                       <td className="p-3 text-sm font-medium">
                         {book.title}
@@ -763,16 +668,7 @@ export default function LibraryPage() {
                       </td>
 
                       <td className="p-3 text-sm">
-                        {book.publisher}
-                      </td>
-
-                      <td className="p-3 text-sm">
-                        <button
-                          onClick={() =>
-                            toggleStatus(
-                              book
-                            )
-                          }
+                        <span
                           className={`
                             px-3
                             py-1
@@ -780,151 +676,54 @@ export default function LibraryPage() {
                             text-[12px]
 
                             ${
-                              book.status ===
-                              "Lent"
-                                ? "bg-purple-100 text-purple-700"
-                                : "bg-green-100 text-green-700"
-                            }
-                          `}
-                        >
-                          {book.status ===
-                          "Lent"
-                            ? `Lent to ${book.lentTo}`
-                            : "At Home"}
-                        </button>
-                      </td>
-
-                      <td className="p-3 text-sm">
-                        <button
-                          onClick={() =>
-                            toggleStamped(
-                              book
-                            )
-                          }
-                          className={`
-                            px-3
-                            py-1
-                            rounded-full
-                            text-[12px]
-
-                            ${
-                              book.stamped
-                                ? "bg-amber-100 text-amber-900"
+                              book.readingStatus ===
+                              "Read"
+                                ? "bg-blue-100 text-blue-700"
+                                : book.readingStatus ===
+                                  "Reading"
+                                ? "bg-green-100 text-green-700"
+                                : book.readingStatus ===
+                                  "Paused"
+                                ? "bg-yellow-100 text-yellow-700"
+                                : book.readingStatus ===
+                                  "DNF"
+                                ? "bg-red-100 text-red-700"
                                 : "bg-gray-200 text-gray-700"
                             }
                           `}
                         >
-                          {book.stamped
-                            ? "Stamped"
-                            : "Not stamped"}
-                        </button>
+                          {book.readingStatus ||
+                            "TBR"}
+                        </span>
                       </td>
 
                       <td className="p-3 text-sm">
-                        <button
-                          onClick={() =>
-                            toggleSell(
-                              book
-                            )
-                          }
-                          className={`
-                            px-3
-                            py-1
-                            rounded-full
-                            text-[12px]
-
-                            ${
-                              book.toSell
-                                ? "bg-red-200 text-red-800"
-                                : "bg-[#efe5d7]"
-                            }
-                          `}
-                        >
-                          {book.toSell
-                            ? "To Sell"
-                            : "Keep"}
-                        </button>
+                        {book.status}
                       </td>
 
                       <td className="p-3 text-sm">
                         <div className="flex gap-2">
-                          {activePage ===
-                          "sell" ? (
-                            <>
-                              <button
-                                onClick={() =>
-                                  deleteBook(
-                                    book.id!
-                                  )
-                                }
-                                className="
-                                  px-3
-                                  py-1
-                                  rounded-lg
-                                  bg-green-100
-                                  text-green-700
-                                  text-[12px]
-                                "
-                              >
-                                ✓ Sold
-                              </button>
+                          <button
+                            onClick={() =>
+                              setEditingBook(
+                                book
+                              )
+                            }
+                            className="px-3 py-1 rounded-lg bg-[#efe5d7] text-[12px]"
+                          >
+                            Edit
+                          </button>
 
-                              <button
-                                onClick={() =>
-                                  toggleSell(
-                                    book
-                                  )
-                                }
-                                className="
-                                  px-3
-                                  py-1
-                                  rounded-lg
-                                  bg-red-200
-                                  text-red-700
-                                  text-[12px]
-                                "
-                              >
-                                ✕ Remove
-                              </button>
-                            </>
-                          ) : (
-                            <>
-                              <button
-                                onClick={() =>
-                                  setEditingBook(
-                                    book
-                                  )
-                                }
-                                className="
-                                  px-3
-                                  py-1
-                                  rounded-lg
-                                  bg-[#efe5d7]
-                                  text-[12px]
-                                "
-                              >
-                                Edit
-                              </button>
-
-                              <button
-                                onClick={() =>
-                                  deleteBook(
-                                    book.id!
-                                  )
-                                }
-                                className="
-                                  px-3
-                                  py-1
-                                  rounded-lg
-                                  bg-red-200
-                                  text-red-700
-                                  text-[12px]
-                                "
-                              >
-                                Delete
-                              </button>
-                            </>
-                          )}
+                          <button
+                            onClick={() =>
+                              deleteBook(
+                                book.id!
+                              )
+                            }
+                            className="px-3 py-1 rounded-lg bg-red-200 text-red-700 text-[12px]"
+                          >
+                            Delete
+                          </button>
                         </div>
                       </td>
                     </tr>

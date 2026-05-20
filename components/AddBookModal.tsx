@@ -41,6 +41,15 @@ export default function AddBookModal({
 
   const [notes, setNotes] = useState("");
 
+  const [readingStatus, setReadingStatus] =
+    useState<
+      | "TBR"
+      | "Reading"
+      | "Read"
+      | "Paused"
+      | "DNF"
+    >("TBR");
+
   const [saving, setSaving] =
     useState(false);
 
@@ -52,6 +61,7 @@ export default function AddBookModal({
 
     setTitle(editingBook.title || "");
     setAuthor(editingBook.author || "");
+
     setPublisher(
       editingBook.publisher || ""
     );
@@ -71,6 +81,11 @@ export default function AddBookModal({
     setLentTo(editingBook.lentTo || "");
 
     setNotes(editingBook.notes || "");
+
+    setReadingStatus(
+      editingBook.readingStatus ||
+        "TBR"
+    );
   }, [editingBook]);
 
   const resetForm = () => {
@@ -87,6 +102,8 @@ export default function AddBookModal({
 
     setNotes("");
 
+    setReadingStatus("TBR");
+
     setEditingBook(null);
   };
 
@@ -99,20 +116,26 @@ export default function AddBookModal({
       setSaving(true);
 
       const payload = {
-  title,
-  author,
-  publisher,
-  purchaseDate,
-  stamped,
-  status,
-  lentTo:
-    status === "Lent"
-      ? lentTo
-      : "",
-  notes,
-  toSell:
-    editingBook?.toSell || false,
-};
+        title,
+        author,
+        publisher,
+        purchaseDate,
+        stamped,
+
+        status,
+
+        lentTo:
+          status === "Lent"
+            ? lentTo
+            : "",
+
+        readingStatus,
+
+        notes,
+
+        toSell:
+          editingBook?.toSell || false,
+      };
 
       // EDIT
       if (editingBook?.id) {
@@ -352,6 +375,54 @@ export default function AddBookModal({
 
                   <option value="Lent">
                     Lent
+                  </option>
+                </select>
+              </div>
+
+              {/* Reading Status */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium">
+                  Reading Status
+                </label>
+
+                <select
+                  value={readingStatus}
+                  onChange={(e) =>
+                    setReadingStatus(
+                      e.target.value as
+                        | "TBR"
+                        | "Reading"
+                        | "Read"
+                        | "Paused"
+                        | "DNF"
+                    )
+                  }
+                  className="
+                    w-full
+                    px-3 py-2
+                    rounded-2xl
+                    border border-[#d7ccbf]
+                    bg-white
+                  "
+                >
+                  <option value="TBR">
+                    TBR
+                  </option>
+
+                  <option value="Reading">
+                    Reading
+                  </option>
+
+                  <option value="Read">
+                    Read
+                  </option>
+
+                  <option value="Paused">
+                    Paused
+                  </option>
+
+                  <option value="DNF">
+                    DNF
                   </option>
                 </select>
               </div>

@@ -91,8 +91,8 @@ export default function BookCard({
               px-3 py-1
               rounded-xl
               bg-red-200
-              text-red-700
-              hover:bg-red-200
+              text-red-800
+              hover:bg-red-300
               transition
             "
           >
@@ -103,6 +103,7 @@ export default function BookCard({
 
       {/* Tags */}
       <div className="mt-5 flex flex-wrap gap-2">
+        {/* Stamped */}
         <button
           onClick={() =>
             onToggleStamped(book)
@@ -126,6 +127,7 @@ export default function BookCard({
             : "Not stamped"}
         </button>
 
+        {/* Lent Status */}
         <button
           onClick={() =>
             onToggleStatus(book)
@@ -148,68 +150,97 @@ export default function BookCard({
             ? `Lent to ${book.lentTo}`
             : "At Home"}
         </button>
+
+        {/* Reading Status */}
+        <span
+          className={`
+            px-3
+            py-1
+            rounded-full
+            text-[12px]
+
+            ${
+              book.readingStatus ===
+              "Read"
+                ? "bg-blue-100 text-blue-700"
+                : book.readingStatus ===
+                  "Reading"
+                ? "bg-green-100 text-green-700"
+                : book.readingStatus ===
+                  "Paused"
+                ? "bg-yellow-100 text-yellow-700"
+                : book.readingStatus ===
+                  "DNF"
+                ? "bg-red-100 text-red-700"
+                : "bg-gray-200 text-gray-700"
+            }
+          `}
+        >
+          {book.readingStatus ||
+            "TBR"}
+        </span>
       </div>
 
       {/* Sell Actions */}
-{book.toSell &&
-activePage === "sell" ? (
-  <div className="mt-5 flex gap-2">
-    <button
-      onClick={() =>
-        onDelete(book.id!)
-      }
-      className="
-        flex-1
-        py-2
-        rounded-xl
-        bg-green-100
-        text-green-700
-        text-sm
-        hover:bg-green-200
-        transition
-      "
-    >
-      ✓ Sold
-    </button>
+      {book.toSell &&
+      activePage === "sell" ? (
+        <div className="mt-5 flex gap-2">
+          <button
+            onClick={() =>
+              onDelete(book.id!)
+            }
+            className="
+              flex-1
+              py-2
+              rounded-xl
+              bg-green-100
+              text-green-700
+              text-sm
+              hover:bg-green-200
+              transition
+            "
+          >
+            ✓ Sold
+          </button>
 
-    <button
-      onClick={() =>
-        onToggleSell(book)
-      }
-      className="
-        flex-1
-        py-2
-        rounded-xl
-        bg-red-200
-        text-red-700
-        text-sm
-        hover:bg-red-200
-        transition
-      "
-    >
-      ✕ Remove
-    </button>
-  </div>
-) : !book.toSell ? (
-  <button
-    onClick={() =>
-      onToggleSell(book)
-    }
-    className="
-      mt-5
-      w-full
-      py-2
-      rounded-xl
-      bg-[#efe5d7]
-      text-[#5c3b28]
-      text-sm
-      hover:bg-[#e7dac8]
-      transition
-    "
-  >
-    Mark To Sell
-  </button>
-) : null}
+          <button
+            onClick={() =>
+              onToggleSell(book)
+            }
+            className="
+              flex-1
+              py-2
+              rounded-xl
+              bg-red-200
+              text-red-700
+              text-sm
+              hover:bg-red-300
+              transition
+            "
+          >
+            ✕ Remove
+          </button>
+        </div>
+      ) : !book.toSell ? (
+        <button
+          onClick={() =>
+            onToggleSell(book)
+          }
+          className="
+            mt-5
+            w-full
+            py-2
+            rounded-xl
+            bg-[#efe5d7]
+            text-[#5c3b28]
+            text-sm
+            hover:bg-[#e7dac8]
+            transition
+          "
+        >
+          Mark To Sell
+        </button>
+      ) : null}
 
       {/* Notes */}
       {book.notes && (

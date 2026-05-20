@@ -20,4 +20,11 @@ export type Book = {
   createdAt: number;
 
   toSell?: boolean;
+
+  readingStatus?:
+  | "TBR"
+  | "Reading"
+  | "Read"
+  | "Paused"
+  | "DNF";
 };

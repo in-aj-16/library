@@ -1,10 +1,12 @@
 type Props = {
   filter: string;
+
   setFilter: (
     value: string
   ) => void;
 
   sort: string;
+
   setSort: (
     value: string
   ) => void;
@@ -18,6 +20,7 @@ export default function Filters({
 }: Props) {
   return (
     <div className="flex gap-2 flex-wrap">
+      {/* Filter */}
       <select
         value={filter}
         onChange={(e) =>
@@ -25,12 +28,12 @@ export default function Filters({
         }
         className="
           h-[44px]
-          px-3
+          px-4
           rounded-xl
           border
           border-[#cdbda8]
           bg-white
-          text-[10px]
+          text-sm
           outline-none
         "
       >
@@ -49,8 +52,29 @@ export default function Filters({
         <option value="available">
           Available
         </option>
+
+        <option value="tbr">
+          TBR
+        </option>
+
+        <option value="reading">
+          Reading
+        </option>
+
+        <option value="read">
+          Read
+        </option>
+
+        <option value="paused">
+          Paused
+        </option>
+
+        <option value="dnf">
+          DNF
+        </option>
       </select>
 
+      {/* Sort */}
       <select
         value={sort}
         onChange={(e) =>
@@ -58,12 +82,12 @@ export default function Filters({
         }
         className="
           h-[44px]
-          px-3
+          px-4
           rounded-xl
           border
           border-[#cdbda8]
           bg-white
-          text-[10px]
+          text-sm
           outline-none
         "
       >
@@ -81,6 +105,10 @@ export default function Filters({
 
         <option value="publisher">
           Publisher
+        </option>
+
+        <option value="readingStatus">
+          Reading Status
         </option>
       </select>
     </div>
