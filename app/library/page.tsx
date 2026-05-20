@@ -622,116 +622,202 @@ export default function LibraryPage() {
             )}
           </div>
         ) : (
-          <div className="overflow-x-auto rounded-2xl border bg-[#fffdf9] border-[#e4d8ca]">
-            <table className="w-full">
-              <thead>
-                <tr className="bg-[#f4ede3]">
-                  <th className="text-left p-3 text-sm">
-                    Title
-                  </th>
+          <div
+  className="
+    overflow-x-auto
+    rounded-2xl
+    border
+    bg-[#fffdf9]
+    border-[#e4d8ca]
+  "
+>
+  <table className="w-full">
+    <thead>
+      <tr className="bg-[#f4ede3]">
+        <th className="text-left p-3 text-sm">
+          Title
+        </th>
 
-                  <th className="text-left p-3 text-sm">
-                    Author
-                  </th>
+        <th className="text-left p-3 text-sm">
+          Author
+        </th>
 
-                  <th className="text-left p-3 text-sm">
-                    Reading
-                  </th>
+        <th className="text-left p-3 text-sm">
+          Reading
+        </th>
 
-                  <th className="text-left p-3 text-sm">
-                    Status
-                  </th>
+        <th className="text-left p-3 text-sm">
+          Stamped
+        </th>
 
-                  <th className="text-left p-3 text-sm">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
+        <th className="text-left p-3 text-sm">
+          Status
+        </th>
 
-              <tbody>
-                {filteredBooks.map(
-                  (book) => (
-                    <tr
-                      key={book.id}
-                      className={`border-b border-[#f1e7da] ${
-                        book.toSell
-                          ? "bg-[#fde2e2]"
-                          : ""
-                      }`}
-                    >
-                      <td className="p-3 text-sm font-medium">
-                        {book.title}
-                      </td>
+        <th className="text-left p-3 text-sm">
+          Actions
+        </th>
+      </tr>
+    </thead>
 
-                      <td className="p-3 text-sm">
-                        {book.author}
-                      </td>
+    <tbody>
+      {filteredBooks.map(
+        (book) => (
+          <tr
+            key={book.id}
+            className={`
+              border-b
+              border-[#f1e7da]
 
-                      <td className="p-3 text-sm">
-                        <span
-                          className={`
-                            px-3
-                            py-1
-                            rounded-full
-                            text-[12px]
+              ${
+                book.toSell
+                  ? "bg-[#fde2e2]"
+                  : ""
+              }
+            `}
+          >
+            {/* Title */}
+            <td className="p-3 text-sm font-medium">
+              {book.title}
+            </td>
 
-                            ${
-                              book.readingStatus ===
-                              "Read"
-                                ? "bg-blue-100 text-blue-700"
-                                : book.readingStatus ===
-                                  "Reading"
-                                ? "bg-green-100 text-green-700"
-                                : book.readingStatus ===
-                                  "Paused"
-                                ? "bg-yellow-100 text-yellow-700"
-                                : book.readingStatus ===
-                                  "DNF"
-                                ? "bg-red-100 text-red-700"
-                                : "bg-gray-200 text-gray-700"
-                            }
-                          `}
-                        >
-                          {book.readingStatus ||
-                            "TBR"}
-                        </span>
-                      </td>
+            {/* Author */}
+            <td className="p-3 text-sm">
+              {book.author}
+            </td>
 
-                      <td className="p-3 text-sm">
-                        {book.status}
-                      </td>
+            {/* Reading */}
+            <td className="p-3 text-sm">
+              <span
+                className={`
+                  px-3
+                  py-1
+                  rounded-full
+                  text-[12px]
 
-                      <td className="p-3 text-sm">
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() =>
-                              setEditingBook(
-                                book
-                              )
-                            }
-                            className="px-3 py-1 rounded-lg bg-[#efe5d7] text-[12px]"
-                          >
-                            Edit
-                          </button>
+                  ${
+                    book.readingStatus ===
+                    "Read"
+                      ? "bg-blue-100 text-blue-700"
+                      : book.readingStatus ===
+                        "Reading"
+                      ? "bg-green-100 text-green-700"
+                      : book.readingStatus ===
+                        "Paused"
+                      ? "bg-yellow-100 text-yellow-700"
+                      : book.readingStatus ===
+                        "DNF"
+                      ? "bg-red-100 text-red-700"
+                      : "bg-gray-200 text-gray-700"
+                  }
+                `}
+              >
+                {book.readingStatus ||
+                  "TBR"}
+              </span>
+            </td>
 
-                          <button
-                            onClick={() =>
-                              deleteBook(
-                                book.id!
-                              )
-                            }
-                            className="px-3 py-1 rounded-lg bg-red-200 text-red-700 text-[12px]"
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
+            {/* Stamped */}
+            <td className="p-3 text-sm">
+              <button
+                onClick={() =>
+                  toggleStamped(
+                    book
                   )
-                )}
-              </tbody>
-            </table>
-          </div>
+                }
+                className={`
+                  px-3
+                  py-1
+                  rounded-full
+                  text-[12px]
+
+                  ${
+                    book.stamped
+                      ? "bg-amber-100 text-amber-900"
+                      : "bg-gray-200 text-gray-700"
+                  }
+                `}
+              >
+                {book.stamped
+                  ? "Stamped"
+                  : "Not stamped"}
+              </button>
+            </td>
+
+            {/* Status */}
+            <td className="p-3 text-sm">
+              <button
+                onClick={() =>
+                  toggleStatus(
+                    book
+                  )
+                }
+                className={`
+                  px-3
+                  py-1
+                  rounded-full
+                  text-[12px]
+
+                  ${
+                    book.status ===
+                    "Lent"
+                      ? "bg-purple-100 text-purple-700"
+                      : "bg-green-100 text-green-700"
+                  }
+                `}
+              >
+                {book.status ===
+                "Lent"
+                  ? `Lent to ${book.lentTo}`
+                  : "At Home"}
+              </button>
+            </td>
+
+            {/* Actions */}
+            <td className="p-3 text-sm">
+              <div className="flex gap-2">
+                <button
+                  onClick={() =>
+                    setEditingBook(
+                      book
+                    )
+                  }
+                  className="
+                    px-3
+                    py-1
+                    rounded-lg
+                    bg-[#efe5d7]
+                    text-[12px]
+                  "
+                >
+                  Edit
+                </button>
+
+                <button
+                  onClick={() =>
+                    deleteBook(
+                      book.id!
+                    )
+                  }
+                  className="
+                    px-3
+                    py-1
+                    rounded-lg
+                    bg-red-200
+                    text-red-700
+                    text-[12px]
+                  "
+                >
+                  Delete
+                </button>
+              </div>
+            </td>
+          </tr>
+        )
+      )}
+    </tbody>
+  </table>
+</div>
         )}
       </div>
     </main>
