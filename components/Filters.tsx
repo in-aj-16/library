@@ -45,6 +45,10 @@ export default function Filters({
           Stamped
         </option>
 
+        <option value="notStamped">
+          Not Stamped
+        </option>
+
         <option value="lent">
           Lent
         </option>

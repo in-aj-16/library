@@ -279,6 +279,12 @@ export default function LibraryPage() {
       );
     }
 
+    if (filter === "notStamped") {
+      result = result.filter(
+        (b) => !b.stamped
+      );
+    }
+
     if (filter === "lent") {
       result = result.filter(
         (b) => b.status === "Lent"
@@ -746,6 +752,10 @@ export default function LibraryPage() {
             Status
           </th>
 
+          <th className="text-left p-3 text-sm">
+            Sell
+          </th>
+
           {!isGuest && (
             <th className="text-left p-3 text-sm">
               Actions
@@ -809,12 +819,19 @@ export default function LibraryPage() {
               </td>
 
               <td className="p-3 text-sm">
-                <span
+                <button
+                  disabled={isGuest}
+                  onClick={() =>
+                    toggleStamped(book)
+                  }
                   className={`
                     px-3
                     py-1
                     rounded-full
                     text-[12px]
+                    transition
+                    disabled:opacity-60
+                    disabled:cursor-not-allowed
 
                     ${
                       book.stamped
@@ -826,30 +843,77 @@ export default function LibraryPage() {
                   {book.stamped
                     ? "Stamped"
                     : "Not stamped"}
-                </span>
+                </button>
               </td>
 
               <td className="p-3 text-sm">
-                <span
+                <button
+                  disabled={isGuest}
+                  onClick={() =>
+                    toggleStatus(book)
+                  }
                   className={`
                     px-3
                     py-1
                     rounded-full
                     text-[12px]
+                    transition
+                    disabled:opacity-60
+                    disabled:cursor-not-allowed
 
                     ${
-                      book.status ===
-                      "Lent"
+                      book.status === "Lent"
                         ? "bg-purple-100 text-purple-700"
                         : "bg-green-100 text-green-700"
                     }
                   `}
                 >
-                  {book.status ===
-                  "Lent"
+                  {book.status === "Lent"
                     ? `Lent to ${book.lentTo}`
                     : "At Home"}
-                </span>
+                </button>
+              </td>
+
+              <td className="p-3 text-sm">
+                {!isGuest && (
+                  book.toSell ? (
+                    <button
+                      onClick={() =>
+                        toggleSell(book)
+                      }
+                      className="
+                        px-3
+                        py-1
+                        rounded-full
+                        text-[12px]
+                        bg-red-100
+                        text-red-700
+                        hover:bg-red-200
+                        transition
+                      "
+                    >
+                      Remove
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() =>
+                        toggleSell(book)
+                      }
+                      className="
+                        px-3
+                        py-1
+                        rounded-full
+                        text-[12px]
+                        bg-[#efe5d7]
+                        text-[#5c3b28]
+                        hover:bg-[#e7dac8]
+                        transition
+                      "
+                    >
+                      Mark To Sell
+                    </button>
+                  )
+                )}
               </td>
 
               {!isGuest && (
